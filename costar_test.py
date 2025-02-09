@@ -1,4 +1,5 @@
 import streamlit as st
+import random
 import pandas as pd
 import numpy as np
 import plotly.express as px
@@ -62,6 +63,52 @@ def assign_badge(score):
 df_original["LQS"] = df["LQS"]
 df_original["Badge"] = df_original["LQS"].apply(assign_badge)
 
+headline_templates = {
+    "Restaurant": [
+        "Turnkey Italian Restaurant with High Foot Traffic",
+        "Profitable Sushi Bar in Downtown",
+        "Cozy Café with Loyal Customer Base",
+        "Award-Winning Steakhouse for Sale",
+        "High-Volume Pizzeria with Delivery Service"
+    ],
+    "Retail": [
+        "Established Boutique in Prime Shopping District",
+        "Profitable Electronics Store with Online Presence",
+        "Trendy Clothing Store - Great Location!",
+        "Specialty Bookstore with Strong Local Following",
+        "Home Decor Retail Store with Steady Sales"
+    ],
+    "E-commerce": [
+        "Dropshipping Store with High-Profit Margins",
+        "Branded Online Clothing Store with Loyal Customers",
+        "Subscription Box Business - Automated Revenue",
+        "Amazon FBA Business with Positive Growth",
+        "Niche Electronics E-commerce Store for Sale"
+    ],
+    "Medical": [
+        "Well-Established Dental Practice for Sale",
+        "Profitable Pharmacy with High Repeat Customers",
+        "Chiropractic Clinic with Modern Equipment",
+        "Physical Therapy Clinic in Growing Area",
+        "Dermatology Practice with State-of-the-Art Facilities"
+    ],
+    "Franchise": [
+        "Popular Fast-Food Franchise in Busy Location",
+        "Well-Known Gym Franchise with Steady Memberships",
+        "Growing Coffee Franchise with Great Support",
+        "Top-Rated Home Services Franchise Opportunity",
+        "Automotive Repair Franchise with Loyal Clientele"
+    ]
+}
+
+# Function to generate random headlines based on category
+def generate_headline(category):
+    return random.choice(headline_templates.get(category, ["Great Business Opportunity!"]))
+
+# Generate headlines for each listing
+df_original["Headline"] = df_original["Category"].apply(generate_headline)
+
+
 st.title("📊 Listing Quality Score (LQS) Dashboard")
 st.caption("This data is purely randomly generated for demo purposes!")
 st.sidebar.header("Filter Options")
@@ -86,7 +133,7 @@ filtered_df = df_original[
 st.subheader("📋 LQS Rankings")
 st.caption("The LQS is calculated based on the formula defined in the proposal.")
 st.dataframe(filtered_df[[
-    "Listing ID", "Category", "Completeness Percentage",
+    "Listing ID", "Headline", "Category", "Completeness Percentage",
     "Text Quality Score", "Image Quality Score", "Days Active",
     "Num Attachments", "Contact Info", "Location Data", "Badge","LQS"
 ]])
